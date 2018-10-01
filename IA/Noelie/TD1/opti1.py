@@ -32,7 +32,7 @@ a = 0.09 #pas de convergence
 
 k=0 #itérateur
 
-
+"""
 #Condition du nombre d'itérations
 while (k<200):
 	p = new_position(px,py,a)
@@ -41,8 +41,9 @@ while (k<200):
 	k= k+1
 	print(k)
 print("Position finale : "+ str(px) +", " + str(py))
-
 """
+
+
 #Condition de la norme du gradient
 grad = gradient(px,py)
 while (math.sqrt(grad[0]**2+grad[1]**2)>0.000001):
@@ -53,7 +54,7 @@ while (math.sqrt(grad[0]**2+grad[1]**2)>0.000001):
 	k= k+1
 	print(k)
 print("Position finale : "+ str(px) +", " + str(py))
-"""
+
 
 """
 #Condition de la norme du pas
