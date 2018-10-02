@@ -23,8 +23,8 @@ def new_position(x,y,alpha):
 	print()
 	return new_pos
 
-x0 = 10 #Coordonnée x de départ
-y0 = 10 #Coordonnée y de départ
+x0 = 1 #Coordonnée x de départ
+y0 = 1 #Coordonnée y de départ
 px = x0
 py = y0
 p = [px,py] #Point actuel
@@ -32,18 +32,18 @@ a = 0.09 #pas de convergence
 
 k=0 #itérateur
 
-"""
+
 #Condition du nombre d'itérations
-while (k<200):
+while (k<100):
 	p = new_position(px,py,a)
 	px = p[0]
 	py = p[1]
 	k= k+1
 	print(k)
 print("Position finale : "+ str(px) +", " + str(py))
+
+
 """
-
-
 #Condition de la norme du gradient
 grad = gradient(px,py)
 while (math.sqrt(grad[0]**2+grad[1]**2)>0.000001):
@@ -56,7 +56,7 @@ while (math.sqrt(grad[0]**2+grad[1]**2)>0.000001):
 print("Position finale : "+ str(px) +", " + str(py))
 
 
-"""
+
 #Condition de la norme du pas
 while (k<200):
 	p = new_position(px,py,a)
