@@ -5,7 +5,7 @@ def gradient(x,y):
 	grad_x = 4*(x-y)**3+4*x-1
 	grad_y = -4*(x-y)**3+2*y+2
 	grad = [grad_x, grad_y]
-	print("Gradient : " + str(grad[0]) + ", " + str(grad[1]))
+	#print("Gradient : " + str(grad[0]) + ", " + str(grad[1]))
 	return grad
 	
 def direction_grad(x,y):
@@ -41,17 +41,17 @@ def direction_newt(x,y):
 	
 	#Calcul de la direction
 	d = -invhes.dot(vgrad)
-	print('Vecteur direction : \n' + str(d))
+	#print('Vecteur direction : \n' + str(d))
 	return d
 	
 def new_position_newt(x,y):
-	print("Position : " + str(x) + ", " + str(y))
+	#print("Position : " + str(x) + ", " + str(y))
 	d = direction_newt(x,y)
 	new_x = x +  d[0][0]
 	new_y = y +  d[1][0]
 	new_pos = [new_x, new_y]
-	print("Nouvelle position : " + str(new_x) + ", " + str(new_y))
-	print('')
+	#print("Nouvelle position : " + str(new_x) + ", " + str(new_y))
+	#print('')
 	return new_pos
 
 x0 = 1 #Coordonnee x de depart
@@ -95,9 +95,10 @@ print("Position finale : "+ str(px) +", " + str(py))
 #		Methode de Newton		#
 #################################
 
+
 print('METHODE DE NEWTON')
 for k in range(100):
-	print(k)
+	#print(k)
 	p = new_position_newt(px,py)
 	px = p[0]
 	py = p[1]
