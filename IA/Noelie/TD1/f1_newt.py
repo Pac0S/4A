@@ -5,14 +5,14 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import opti1 as op
+from opti1 import new_position_newt
 #--------------------------------------
 
 #Definition of what to plot
 fig = plt.figure() #opens a figure environment
 ax = fig.gca(projection='3d') #to perform a 3D plot
-X = np.arange(-1, 1, 0.05) #x range
-Y = np.arange(-1, 1, 0.05) #y range
+X = np.arange(-3, 3, 0.1) #x range
+Y = np.arange(-3, 3, 0.1) #y range
 X, Y = np.meshgrid(X, Y) #creates a rectangular grid on which to plot the function values (Z)
 Z= (X-Y)**4 + 2*X**2 + Y**2 - X + 2*Y #defines the function values
 surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, linewidth=0, antialiased=False, cmap=cm.viridis) #plot definition and options
@@ -21,16 +21,21 @@ surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, linewidth=0, antialiased=F
 n=2
 x0=1
 y0=1
+
+
 def trace_newt(n,x0,y0):
 	z0 = (x0-y0)**4 + 2*x0**2 + y0**2 - x0 + 2*y0
+	
 	px = x0
 	py = y0
 	pz = z0
+	
 	x = [x0]
 	y = [y0]
 	z = [z0]
+	
 	for k in range(n):
-		p = op.new_position_newt(px,py)
+		p = new_position_newt(px,py)
 		px = p[0]
 		py = p[1]
 		pz = (px-py)**4 + 2*px**2 + py**2 - px + 2*py
@@ -39,8 +44,8 @@ def trace_newt(n,x0,y0):
 		z.append(pz)
 	return x,y,z
 		
-valx0 = [-0.5,0.5,1]
-valy0 = [-0.5,0.5,1]
+valx0 = [-3,2,3]
+valy0 = [-3,2,3]
 col_ind = 0
 colors = ['b', 'g', 'r', 'c', 'm', 'y',  'k', 'w', 'tab:orange', 'slateblue', 'lime', 'maroon', 'gold', 'grey', 'indigo', 'ivory' ]
 for i in valx0:
