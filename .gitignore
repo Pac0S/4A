@@ -12,4 +12,6 @@ genomik_bioif/TP1/goldtable.txt
 genomik_bioif/genome_size.txt
 genomik_bioif/support_INSA.pdf
 IA/Noelie/Optimisation_cours.pdf
-
+*.pdf
+*.fastq
+*.txt
