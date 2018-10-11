@@ -50,6 +50,7 @@ def new_position_grad(x,y,alpha):
 
 def direction_newt(x,y):
 	grad = gradient(x,y)
+	
 	#Vecteur gradient
 	vgrad = np.array([[grad[0]],[grad[1]]])
 	#print(vgrad.shape)
@@ -124,6 +125,7 @@ if __name__=="__main__":
 		k= k+1
 	print("Gradient < " + str(lim) + ", iteration no "+str(k))
 	print("Gradient : " + str(math.sqrt(grad[0]**2+grad[1]**2)))
+	print("L1 = " + str(abs(grad[0]) + abs(grad[1])))
 	print("Position finale : "+ str(px) +", " + str(py))
 	print('')
 
@@ -146,6 +148,7 @@ if __name__=="__main__":
 		k=k+1
 	print("Gradient < " + str(lim) + ", iteration no "+str(k))
 	print("Gradient : " + str(math.sqrt(grad[0]**2+grad[1]**2)))
+	print("L1 = " + str(abs(grad[0]) + abs(grad[1])))
 	print("Position finale : "+ str(px) +", " + str(py))
 	
 
