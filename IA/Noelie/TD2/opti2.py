@@ -31,13 +31,44 @@ def gradient(x,y,a):
 	return grad
 	
 #Derivee 2nde de f par rapport a une variable a
-def derivee2(x,a):
+def deriveef2(x,a):
 	der = 0
 	for i in range(len(x)):
-		der = der + (x[i]**2 * math.exp(-a*x[i]))
-		#der = der + (-x[i]* math.exp(-a1*x[i]))*(-x[i]* math.exp(-a2*x[i]))
+		der = der + (-x[i]* math.exp(-a*x[i]))**2 #Derivee de g au carre
 	return der
 	
+
+def lev_mar(l_init, a_init, x, y):
+	l = l_init
+	a = a_init
+	k = 1
+	grad = 1
+	while (k <= 10000000 and abs(grad) > 0.00001):
+		print("k = " + str(k))
+		print ("lambda : " + str(l) + "\na : " + str(a))
+		grad = gradient(x,y,a) #Gradient de f en x
+		der2 = deriveef2(x,a) #derivee seconde de la fonction f
+		#middle = True
+		#while (middle == True):
+		hLM = der2*(1+l)  #Matrice hessienne ponderee = derivee seconde ponderee dans ce cas
+		d = - grad/hLM #Direction de descente
+		f_act = f(x,y,a)
+		f_next = f(x,y,a+d)
+		if f_next < f_act :
+			a = a+d
+			l = l/10
+			middle = False
+		else :
+			l = l*10
+			middle = True
+		k += 1
+		print ("Gradient : " + str(grad))
+		print("f_act : " + str(f_act) + "\nf_next : " + str(f_next))
+		print("f_next < f_act : ", middle)
+		print ("direction : " + str(d) + "\n\n")
+		
+		
+		
 	
 	
 
@@ -51,13 +82,8 @@ if __name__=="__main__":
 	
 	###Creation du jeu de donnees bruite###
 	
-	data = np.zeros((2,int(3/0.001)+1))
-	#print(data.shape)
-	
-
-	##Creation des donnees
 	a = 2.
-	b = 0.01
+	b = 1
 	
 	data = np.zeros((2,301))
 	data[0] = np.arange(0,3.01,0.01)
@@ -72,8 +98,13 @@ if __name__=="__main__":
 	grad1 = gradient(data[0],data[1],a)
 	print("gradient : " + str(grad1))
 	
-	der1 = derivee2(data[0],a)
+	der1 = deriveef2(data[0],a)
 	print("derivee 2nde : " + str(der1))
+	
+	print("")
+	print("")
+	
+	lev_mar(0.001, 1.5, data[0], data[1])
 
 	#print(data)
 	
