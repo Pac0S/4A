@@ -43,7 +43,7 @@ def lev_mar(l_init, a_init, x, y):
 	a = a_init
 	k = 1
 	grad = 1
-	while (k <= 10000000 and abs(grad) > 0.00001):
+	while (k <= 20) :#and abs(grad) > 0.00001):
 		print("k = " + str(k))
 		print ("lambda : " + str(l) + "\na : " + str(a))
 		grad = gradient(x,y,a) #Gradient de f en x
@@ -64,7 +64,7 @@ def lev_mar(l_init, a_init, x, y):
 		k += 1
 		print ("Gradient : " + str(grad))
 		print("f_act : " + str(f_act) + "\nf_next : " + str(f_next))
-		print("f_next < f_act : ", middle)
+		print("f_next < f_act : ", not middle)
 		print ("direction : " + str(d) + "\n\n")
 		
 		
@@ -82,8 +82,8 @@ if __name__=="__main__":
 	
 	###Creation du jeu de donnees bruite###
 	
-	a = 2.
-	b = 1
+	a = 1.5
+	b = 0.01
 	
 	data = np.zeros((2,301))
 	data[0] = np.arange(0,3.01,0.01)
@@ -114,6 +114,6 @@ if __name__=="__main__":
 	plt.xlabel('x')
 	plt.ylabel('y')
 	
-	#plt.show()
+	plt.show()
 	
 	
