@@ -9,19 +9,30 @@ import numpy as np
 
 
 
-#Fonction g appliquee a une valeur x pour une valeur de a donnee
+	#########################
+	#	Calcul de g(x,a)	#
+	#########################
+
 def g(x,a):
 	g = math.exp(-a*x)
 	return g
 	
 	
+	
+	#########################################
+	#		Calcul de la derivee de g par a	#
+	#########################################
+
 def derg(x,a):
 	dgda = -x*math.exp(-a*x)
 	return dgda
 	
 		
 
-## f est la somme des erreurs au carre ##
+	#########################################
+	#	f est la somme des ecarts au carre	#
+	#########################################
+
 def f(x,y,a):
 	f = 0
 	for i in range(len(x)):
@@ -32,7 +43,10 @@ def f(x,y,a):
 
 
 
-# Gradient de f en fonction de a #
+	#####################################
+	#	Gradient de f en fonction de a	#
+	#####################################
+
 def gradient(x,y,a):
 	grad = 0
 	for i in range(len(x)):
@@ -41,8 +55,10 @@ def gradient(x,y,a):
 	return grad
 	
 
-	
-#Derivee 2nde de f par rapport a une variable a
+	#########################################################
+	#		Derivee 2nde de f par rapport a une variable a	#
+	#########################################################
+
 def derf2(x,a):
 	der = 0
 	for i in range(len(x)):
@@ -50,13 +66,17 @@ def derf2(x,a):
 	return der
 	
 	
-	
+	#########################################
+	#		Methode de Levenberg-Marquardt	#
+	#########################################	
 
 def lev_mar(l_init, a_init, x, y):
 	l = l_init
 	a = a_init
 	k = 1
 	grad = 1
+	
+	
 	while (k <= 20 and abs(grad) > 0.00001):
 		print("k = " + str(k))
 		print ("lambda : " + str(l) + "\na : " + str(a))
@@ -68,6 +88,8 @@ def lev_mar(l_init, a_init, x, y):
 		d = - grad/hLM #Direction de descente
 		f_act = f(x,y,a)
 		f_next = f(x,y,a+d)
+		
+		
 		if f_next < f_act :
 			a = a+d
 			l = l/10
@@ -75,6 +97,8 @@ def lev_mar(l_init, a_init, x, y):
 		else :
 			l = l*10
 			middle = True
+			
+		
 		k += 1
 		print ("Gradient : " + str(grad))
 		print("f_act : " + str(f_act) + "\nf_next : " + str(f_next))
@@ -173,20 +197,20 @@ if __name__=="__main__":
 	print("")
 	
 	#####################################################
-	#		Test de la methodede Levenberg-Marquardt	#
+	#		Test de la methode de Levenberg-Marquardt	#
 	#####################################################	
 
 	lev_mar(0.001, 1.5, noised[0], noised[1])
 	#lev_mar(lambda, a,		x,		y	)
 
-	#print(data)
-	'''
-	plt.plot(data[0], gs, 'r', label = 'Courbe theorique de g')
-	plt.scatter(data[0],data[1], s=1, c='g', marker='o', label = 'Valeurs bruitees de g')
+	#print(noised)
+	
+	plt.plot(nonoised[0], nonoised[1], 'r', label = 'Courbe theorique de g')
+	plt.scatter(noised[0],noised[1], s=1, c='g', marker='o', label = 'Valeurs bruitees de g')
 	plt.legend(loc = 'upper right')
 	plt.xlabel('x')
 	plt.ylabel('y')
-	'''
+	
 	#plt.show()
 #Modification inutile
 	
