@@ -181,11 +181,11 @@ def derh2(x,a1,a2):
 	#########################################
 
 def f2(x,y,a1, a2):
-	f2 = 0
+	fval = 0.
 	for i in range(len(x)):
-		f2 = f2 + (y[i] - h(x[i], a1, a2))**2
-	f2 = f2*0.5
-	return f2
+		fval = fval + (y[i] - h(x[i], a1, a2))**2
+	fval = fval*0.5
+	return fval
 	
 	
 	#############################################
@@ -203,7 +203,100 @@ def gradient2(x, y, a1, a2):
 	grad = [grada1, grada2]
 	return grad
 	
+	
+	#################################################
+	#		Matrice Hessienne ponderee de f(a1, a2)	#
+	#################################################
 
+def hlm(x, a1, a2, lam):
+	dcar1 = 0
+	dcar2 = 0
+	dcar12 = 0
+	for i in range(len(x)):
+		dcar1 += derh1(x[i], a1, a2) ** 2
+		dcar2 += derh2(x[i], a1, a2) ** 2
+		dcar12 += derh1(x[i], a1, a2) * derh2(x[i], a1, a2)
+	hess = np.array([[dcar1,dcar12],[dcar12,dcar2]])
+	#print(hess)
+	hlm = hess * (1+lam)
+	return hlm
+
+
+	#####################################
+	#		Methode de L-M fonction h	#
+	#####################################	
+
+def lev_mar2(l_init, a1_init, a2_init, x, y, n, grad_lim):
+	l = l_init
+	a1 = a1_init
+	a2 =a2_init
+	k = 1
+	
+	lambda_list = []
+	a1_list = []
+	a2_list = []
+	f_list =[]
+	grad_list = []
+	k_list = []
+	
+	while (k <= n):# and abs(grad) > grad_lim):
+		
+		#Ajout de k a une liste
+		print("k = " + str(k))
+		k_list.append(k)
+		
+		#Ajout de lambda a une liste
+		print ("lambda : " + str(l))
+		lambda_list.append(l)
+		
+		#Ajout de a a une liste
+		print( "a1 : " + str(a1))
+		a1_list.append(a1)
+		
+		#Ajout de a2 a une liste
+		print( "a2 : " + str(a2))
+		a2_list.append(a2)
+		
+		#ajout du gradient a une liste
+		vgrad = gradient2(x,y,a1,a2) #Gradient de f en x
+		grad = math.sqrt(vgrad[0]**2 + vgrad[1] **2)
+		print ("Gradient : " + str(grad))
+		grad_list.append(abs(grad))
+		
+		
+		
+		hessp = hlm(x, a1, a2, l)
+		invhlm = np.linalg.inv(hessp)
+		d = -invhlm.dot(vgrad)
+		#print(d)
+		
+		
+		k+=1
+		
+		
+		#calcul et ajout de f a une liste
+		f_act = f2(x,y,a1, a2)
+		f_next = f2(x,y,a1+d[0], a2+d[1])
+		f_list.append(f_act)
+		print("f_act : " + str(f_act) + "\nf_next : " + str(f_next))
+		
+		
+		#Verification de la condition
+		if f_next < f_act :
+			a1 = a1+d[0]
+			a2 = a2+d[1]
+			l = l/10
+			
+		else :
+			l = l*10
+			
+		k += 1
+		
+		
+		print("\n\n")
+		
+	param = [k_list, a1_list, a2_list, lambda_list, grad_list, f_list]
+	return param	
 
 	
 '''
@@ -306,8 +399,8 @@ if __name__=="__main__":
 	#f = 0 sur les donnees non bruitees (somme des ecarts au carre = 0)
 	'''
 	
-	f2 = f2(noised[0], noised[1], a1, a2)
-	print("f2 donnees bruitees : " + str(f2))
+	f_2 = f2(noised[0], noised[1], a1, a2)
+	print("f2 donnees bruitees : " + str(f_2))
 	
 	#####################################################
 	#		Test de gradient sur les donnees bruitees	#
@@ -319,7 +412,7 @@ if __name__=="__main__":
 	'''
 	
 	grad2 = gradient2(noised[0], noised[1], a1, a2)
-	print("gradient donnees bruitees : \n (" + str(grad2[0]) + ',' + str(grad2[1]) + ")")
+	print("gradient donnees bruitees : \n(" + str(grad2[0]) + ", " + str(grad2[1]))
 	
 	#####################################################
 	#		Test de derivee seconde pour la fonction g	#
@@ -331,14 +424,27 @@ if __name__=="__main__":
 	print("")
 	print("")
 	'''
+	#############################################
+	#		Test Hessienne ponderee f(a1, a2)	#
+	#############################################
+	
+	hlm1 = hlm(noised[0], a1 , a2, 0.001)
+	print("hlm = \n" + str(hlm1))
+	
 
 	#####################################################
 	#		Test de la methode de Levenberg-Marquardt	#
 	#####################################################	
 	
+
+	#################
+	#	Fonction 	#
+	#################
+	
 	'''
 	#lm1 = lev_mar(0.001, 1.5, noised[0], noised[1], n, 0.0001)
 	#	  lev_mar(lambda, a , 		x  ,		y , n ,  grad_lim      )
+	
 	
 	k_list = lm1[0]
 	a_list = lm1[1]
@@ -390,5 +496,11 @@ if __name__=="__main__":
 	plt.ylabel('y')
 	plt.show()
 	'''
+	
+	#################
+	#	Fonction h	#
+	#################
+	
+	lm2 = lev_mar2(0.001, 1.5, 1.5, noised[0], noised[1], n, 0.0001)
 	
 	
