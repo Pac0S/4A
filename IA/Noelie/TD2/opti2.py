@@ -271,9 +271,6 @@ def lev_mar2(l_init, a1_init, a2_init, x, y, n, grad_lim):
 		#print(d)
 		
 		
-		k+=1
-		
-		
 		#calcul et ajout de f a une liste
 		f_act = f2(x,y,a1, a2)
 		f_next = f2(x,y,a1+d[0], a2+d[1])
@@ -338,7 +335,7 @@ if __name__=="__main__":
 	#########################
 	
 	a = 2
-	b = 0.01
+	b = 0.001
 	n=20
 	
 	a1 = 2.
@@ -503,4 +500,44 @@ if __name__=="__main__":
 	
 	lm2 = lev_mar2(0.001, 1.5, 1.5, noised[0], noised[1], n, 0.0001)
 	
+	k_list = lm2[0]
+	a1_list = lm2[1]
+	a2_list = lm2[2]
+	lambda_list = lm2[3]
+	grad_list = lm2[4]
+	f_list = lm2[5]
 	
+	a1_opt = a1_list[n-1]
+	a2_opt = a2_list[n-1]
+	
+	
+	#Jeu de donnees pour les a optimaux
+	h_aopt = []
+	i=0
+	for xi in nonoised[0]:
+		h_aopt.append(h(xi,a1_opt,a2_opt))
+		i+=1
+	
+	
+	plt.plot(k_list, a1_list, 'm', label = 'a1')
+	plt.plot(k_list, a2_list, 'y', label = 'a2')
+	plt.xlabel('k')
+	plt.ylabel('a')
+	plt.title('Evolution des parametre a1 et a2')
+	plt.legend(loc = 'upper right')
+	plt.show()
+	
+	
+	plt.plot(k_list, lambda_list, 'g')
+	plt.xlabel('k')
+	plt.ylabel('lambda')
+	plt.title('Evolution du parametre lambda')
+	plt.show()
+	
+	plt.plot(nonoised[0], nonoised[1], 'r', label = 'Courbe theorique de h avec a1=2 et a2=3')
+	#plt.plot(nonoised[0], h_aopt, 'r', label = 'Courbe optimisee de h')
+	plt.scatter(noised[0],noised[1], s=1, c='g', marker='o', label = 'Valeurs bruitees de h')
+	plt.legend(loc = 'upper right')
+	plt.xlabel('x')
+	plt.ylabel('y')
+	plt.show()
