@@ -8,6 +8,12 @@ import numpy as np
 
 
 
+'''
+	#############################
+	#	Cas mono-exponentiel	#
+	#############################
+'''
+
 
 	#########################
 	#	Calcul de g(x,a)	#
@@ -130,103 +136,208 @@ def lev_mar(l_init, a_init, x, y, n, grad_lim):
 		
 	param = [k_list, a_list, lambda_list, grad_list, f_list]
 	return param
-	
+
+
+
+
+'''
+	#########################
+	#	Cas bi-exponentiel	#
+	#########################
+'''	
+
+
+
+	#########################
+	#	Calcul de g(x,a)	#
+	#########################
+
+def h(x,a1,a2):
+	h = x**a1 * math.exp(-a2*x)
+	return h
 	
 
+	
+	#############################################
+	#		Calcul de la derivee de h par a1	#
+	#############################################
+
+def derh1(x,a1,a2):
+	dhda1 = x**a1 * math.log(x) * math.exp(-a2*x)
+	return dhda1		
+	
+	
+	#############################################
+	#		Calcul de la derivee de h par a2	#
+	#############################################	
+
+def derh2(x,a1,a2):
+	dhda2 = -x**(a1+1) * math.exp(-a2*x)
+	return dhda2		
+
+
+	#########################################
+	#	Calcul de la fonction de cout f2	#
+	#########################################
+
+def f2(x,y,a1, a2):
+	f2 = 0
+	for i in range(len(x)):
+		f2 = f2 + (y[i] - h(x[i], a1, a2))**2
+	f2 = f2*0.5
+	return f2
+	
+	
+	#############################################
+	#	Gradient de f en fonction de a1 et a2	#
+	#############################################
+
+def gradient2(x, y, a1, a2):
+	grada1 = 0
+	grada2 = 0
+	for i in range(len(x)):
+		grada1 = grada1 + (y[i]- h(x[i], a1, a2)) * derh1(x[i],a1,a2)
+		grada2 = grada2 + (y[i]- h(x[i], a1, a2)) * derh2(x[i],a1,a2)
+	grada1 = -grada1
+	grada2 = -grada2
+	grad = [grada1, grada2]
+	return grad
+	
+
+
+	
+'''
+	#############
+	#	MAIN	#
+	#############
+'''
+	
 if __name__=="__main__":
 
 
-	#################################################
-	#		Test fonction g et derivee seconde		#
-	#################################################
-	
+	#########################################
+	#		Test fonction g et derivee		#
+	#########################################
+	'''
 	###x = 1, a = 1###
 	
 	g1 = g(1,1)
 	dg1 = derg(1,1)
 	print("a=1, x=1, g = " + str(g1))
 	print("a=1, x=1, dg/da = " + str(dg1))
+	'''
+	
+	#########################################
+	#		Test fonction h et derivees		#
+	#########################################
+	
+	###x = 1, a = 1###
+	
+	h1 = h(1.5,1,1)
+	dh1 = derh1(1.5,1,1)
+	dh2 = derh2(1.5,1,1)
+	print("a1=1, a2=1, x=1, h = " + str(h1))
+	print("a1=1, a2=1, x=1.5, dh/da1 = " + str(dh1))
+	print("a1=1, a2=1, x=1.5, dh/da2 = " + str(dh2))
 	
 	#########################
 	#		Parametres		#
 	#########################
 	
 	a = 2
-	b = 0.1
+	b = 0.01
 	n=20
 	
+	a1 = 2.
+	a2 = 3.
 	
-	#####################################################
-	#		Creation du jeu de donnes non bruitees		#
-	#####################################################
 	
-	init = (2,301)
+	#################################################################
+	#		Creation du jeu de donnes non bruitees pour g et h		#
+	#################################################################
+	
+	init = (2,500)
 	nonoised = np.zeros(init)
 	
-	xi=0
+	xi=0.01
 	for i in range(len(nonoised[0])):
 		nonoised[0][i] = xi
 		xi+=0.01
 	
 	i=0
 	for xi in nonoised[0]:
-		nonoised[1][i] = g(xi,a)
+		#FONCTION 1
+		#nonoised[1][i] = g(xi,a)
+		
+		#FONCTION 2
+		nonoised[1][i] = h(xi, a1, a2)
 		i+=1
 	#print(nonoised)
 	
 	
-	#################################################
-	#		Creation du jeu de donnes bruitees		#
-	#################################################
+	#############################################################
+	#		Creation du jeu de donnes bruitees pour g et h		#
+	#############################################################
 
 	
 	noised = np.zeros(init)
 	
-	xi=0
+	xi=0.01
 	for i in range(len(noised[0])):
 		noised[0][i] = xi
 		xi+=0.01
 	
 	i=0
 	for xi in noised[0]:
-		noised[1][i] = g(xi,a)+ b * np.random.randn()
+		#FONCTION 1
+		#noised[1][i] = g(xi,a)+ b * np.random.randn()
+		
+		#FONCTION 2
+		noised[1][i] = abs(h(xi,a1,a2)+ b * np.random.randn())
 		i+=1
 	#print(noised)
 	
 	#############################################
 	#		Test de f sur les donnees bruitees	#
 	#############################################
-	
+	'''
 	f1 = f(noised[0], noised[1], a)
 	print("f donnees bruitees : " + str(f1))
 	#f = 0 sur les donnees non bruitees (somme des ecarts au carre = 0)
+	'''
 	
+	f2 = f2(noised[0], noised[1], a1, a2)
+	print("f2 donnees bruitees : " + str(f2))
 	
 	#####################################################
 	#		Test de gradient sur les donnees bruitees	#
 	#####################################################
-	
+	'''
 	grad1 = gradient(noised[0], noised[1], a)
 	print("gradient donnees bruitees : " + str(grad1))
 	#grad = 0 sur les donnees non bruitees
+	'''
 	
+	grad2 = gradient2(noised[0], noised[1], a1, a2)
+	print("gradient donnees bruitees : \n (" + str(grad2[0]) + ',' + str(grad2[1]) + ")")
 	
 	#####################################################
 	#		Test de derivee seconde pour la fonction g	#
 	#####################################################
-	
+	'''
 	df2 = derf2(noised[0], a)
 	print("derivee seconde de f par rapport a a : " + str(df2))
 	
 	print("")
 	print("")
-	
+	'''
+
 	#####################################################
 	#		Test de la methode de Levenberg-Marquardt	#
 	#####################################################	
 	
-	
-	lm1 = lev_mar(0.001, 1.5, noised[0], noised[1], n, 0.0001)
+	'''
+	#lm1 = lev_mar(0.001, 1.5, noised[0], noised[1], n, 0.0001)
 	#	  lev_mar(lambda, a , 		x  ,		y , n ,  grad_lim      )
 	
 	k_list = lm1[0]
@@ -278,8 +389,6 @@ if __name__=="__main__":
 	plt.xlabel('x')
 	plt.ylabel('y')
 	plt.show()
-
-	
-#Modification inutile
+	'''
 	
 	
