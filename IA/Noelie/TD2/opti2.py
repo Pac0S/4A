@@ -335,7 +335,7 @@ if __name__=="__main__":
 	#########################
 	
 	a = 2
-	b = 0.001
+	b = 1
 	n=20
 	
 	a1 = 2.
@@ -527,7 +527,7 @@ if __name__=="__main__":
 	plt.legend(loc = 'upper right')
 	plt.show()
 	
-	
+	'''
 	plt.plot(k_list, lambda_list, 'g')
 	plt.xlabel('k')
 	plt.ylabel('lambda')
@@ -541,3 +541,47 @@ if __name__=="__main__":
 	plt.xlabel('x')
 	plt.ylabel('y')
 	plt.show()
+	'''
+
+
+	#Changement de phase de a
+	evo_a1=[]
+	evo_a2=[]
+	echelle_bruit=[]
+	b=0.01
+	while(b<=1):
+		noised = np.zeros(init)
+		
+		xi=0.01
+		for i in range(len(noised[0])):
+			noised[0][i] = xi
+			xi+=0.01
+		
+		i=0
+		for xi in noised[0]:
+			#FONCTION 1
+			#noised[1][i] = g(xi,a)+ b * np.random.randn()
+			
+			#FONCTION 2
+			noised[1][i] = abs(h(xi,a1,a2)+ b * np.random.randn())
+			i+=1
+		#print(noised)
+		lm3 = lev_mar2(0.001, 1.5, 1.5, noised[0], noised[1], n, 0.0001)
+		a1_list2 = lm3[1]
+		a2_list2 = lm3[2]
+		a1_opt2 = a1_list2[n-1]
+		a2_opt2 = a2_list2[n-1]
+		evo_a1.append(a1_opt2)
+		evo_a2.append(a2_opt2)
+		echelle_bruit.append(b)
+		
+		b+=0.01
+		
+	plt.plot(echelle_bruit, evo_a1, 'm', label = 'a1 optimal')
+	plt.plot(echelle_bruit, evo_a2, 'y', label = 'a2 optimal')
+	plt.xlabel('coefficient multiplicateur du bruit')
+	plt.ylabel('a optimaux')
+	plt.title('Evolution des parametre optimaux a1 et a2')
+	plt.legend(loc = 'upper right')
+	plt.show()
+
